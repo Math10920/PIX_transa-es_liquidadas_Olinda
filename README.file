@@ -52,6 +52,7 @@ for data in meses_de_coleta:
 if df_transacoes_pix_liquidadas:
     df_transacoes_pix_liquidadas_concatenada = pd.concat(df_transacoes_pix_liquidadas , ignore_index= True)
     print(f"\n Base de dados coletada com sucesso e concatenação de dataframes realizada com sucesso")
+    df_transacoes_pix_liquidadas_concatenada.to_csv("dados_historicos_trasacoes_pix.csv" , index = False)
 
 else:
     print(f"Houve um erro e os dados não puderam ser coletados")
