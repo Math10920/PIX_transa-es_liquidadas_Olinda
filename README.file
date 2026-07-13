@@ -45,7 +45,7 @@ for data in meses_de_coleta:
         else:
             print(f"Erro, Status Code {response_api_transacoes.status_code}")
     except Exception as e:
-        print(f"Não foi possível carregar a {response_api_transacoes} e {e}")
+        print(f"Não foi possível carregar a {mes_atual:02d}/{ano_atual} e {e}")
 
     time.sleep(1)
 
