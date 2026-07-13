@@ -33,7 +33,7 @@ for data in meses_de_coleta:
 
         if response_api_transacoes.status_code == 200:
             dados_json = response_api_transacoes.json()
-            print(f"Executando a coleta das transações liquidadas dentro do período histórico: {ano_mes} atual")
+            print(f"Executando a coleta das transações liquidadas dentro do período histórico: {mes_atual:02d}/{ano_atual}")
             
             if 'value' in dados_json and len(dados_json['value']) > 0:
                 df_mes = pd.DataFrame(dados_json['value'])
