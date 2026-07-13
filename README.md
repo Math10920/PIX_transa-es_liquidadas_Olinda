@@ -1,2 +1,60 @@
 # PIX_transa-es_liquidadas_Olinda
 Transações pix liquidadas pelo Banco Central
+import pandas as pd
+import numpy as np
+import requests as rq
+from datetime import datetime
+import time
+
+
+
+hoje = datetime.today()
+mes_atual = hoje.month
+ano_atual = hoje.year
+print(f"Realizando a coleta dos dados dentro da API do Banco Central")
+
+data_inicial = "2020-11-01"
+data_final = f"{ano_atual}-{mes_atual}-01"
+print(f"Data limite atual do sistema que está sendo executada: {mes_atual:02d}/{ano_atual}")
+
+meses_de_coleta = pd.date_range(start= data_inicial , end= data_final , freq= "MS")
+df_transacoes_pix_liquidadas = []
+
+
+
+for data in meses_de_coleta:
+    ano_mes = data.strftime("%Y%m")
+    
+    url_api_transacoes_pix = f"https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/EstatisticasTransacoesPix(Database=@Database)?@Database='{ano_mes}'&$format=json"
+
+    try:
+
+        response_api_transacoes = rq.get(url_api_transacoes_pix)
+
+        if response_api_transacoes.status_code == 200:
+            dados_json = response_api_transacoes.json()
+            print(f"Executando a coleta das transações liquidadas dentro do período histórico: {ano_mes} atual")
+            
+            if 'value' in dados_json and len(dados_json['value']) > 0:
+                df_mes = pd.DataFrame(dados_json['value'])
+                df_transacoes_pix_liquidadas.append(df_mes)
+
+            else:
+                print(f"Erro ao carregar o dataframe atual da data")
+
+        else:
+            print(f"Erro, Status Code {response_api_transacoes.status_code}")
+    except Exception as e:
+        print(f"Não foi possível carregar a {response_api_transacoes} e {e}")
+
+    time.sleep(1)
+
+if df_transacoes_pix_liquidadas:
+    df_transacoes_pix_liquidadas_concatenada = pd.concat(df_transacoes_pix_liquidadas , ignore_index= True)
+    print(f"\n Base de dados coletada com sucesso e concatenação de dataframes realizada com sucesso")
+
+else:
+    print(f"Houve um erro e os dados não puderam ser coletados")
+
+df_transacoes_pix_liquidadas_atualizada = df_transacoes_pix_liquidadas_concatenada
+display(df_transacoes_pix_liquidadas_atualizada)
