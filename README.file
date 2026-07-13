@@ -38,6 +38,7 @@ for data in meses_de_coleta:
             if 'value' in dados_json and len(dados_json['value']) > 0:
                 df_mes = pd.DataFrame(dados_json['value'])
                 df_transacoes_pix_liquidadas.append(df_mes)
+                print(f"Concluído a extração do arquivo atual da data {mes_atual:02d}/{ano_atual}")
 
             else:
                 print(f"Erro ao carregar o dataframe atual da data")
